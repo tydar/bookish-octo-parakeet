@@ -1,0 +1,233 @@
+.TH "adjmat.c" 3 "Wed May 11 2022" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+adjmat.c
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <stdbool\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBGSIZE\fP   5"
+.br
+.ti -1c
+.RI "#define \fBQSIZE\fP   GSIZE+1"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBenqueue\fP (size_t queue[QSIZE], size_t val)"
+.br
+.RI "enqueue adds an element to the front of a fixed-size queue\&. "
+.ti -1c
+.RI "void \fBprintqueue\fP (size_t queue[QSIZE])"
+.br
+.ti -1c
+.RI "size_t \fBdequeue\fP (size_t queue[QSIZE])"
+.br
+.RI "dequeue removes an element from the front of the queue "
+.ti -1c
+.RI "size_t \fBbfs\fP (size_t graph[GSIZE], bool adj[GSIZE][GSIZE], size_t start, size_t val)"
+.br
+.RI "bfs is a breadth-first search on a graph using an adjacency matrix "
+.ti -1c
+.RI "void \fBsetcomp\fP (size_t comp[GSIZE][GSIZE])"
+.br
+.RI "setcomp sets a GSIZE x GSIZE size_t array to SIZE_MAX "
+.ti -1c
+.RI "bool \fBconncomp\fP (bool adj[GSIZE][GSIZE], size_t comp[GSIZE][GSIZE])"
+.br
+.RI "conncomp computes the list of connected components of the undirected graph represented by the adjacency matrix adj\&. "
+.ti -1c
+.RI "void \fBprintcomp\fP (size_t comp[GSIZE][GSIZE])"
+.br
+.RI "printcomp pretty prints the connected components represented by the array comp "
+.ti -1c
+.RI "void \fBbfs_span\fP (bool adj[GSIZE][GSIZE], bool st[GSIZE][GSIZE])"
+.br
+.RI "bfs_span constructs a spanning tree for the given graph defined by adjacency matrix "
+.ti -1c
+.RI "void \fBprint_adj\fP (bool adj[GSIZE][GSIZE])"
+.br
+.RI "print_adj prints an adjacency array to the terminal "
+.ti -1c
+.RI "int \fBmain\fP (void)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "size_t bfs (size_t graph[GSIZE], bool adj[GSIZE][GSIZE], size_t start, size_t val)"
+
+.PP
+bfs is a breadth-first search on a graph using an adjacency matrix 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIadj\fP is an adjacency matrix such that adj[i][j] is true iff there is an arc from node i to node j 
+.br
+\fIstart\fP is the id of the node at which to start the search 
+.br
+\fIval\fP is the value we are searching for 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+0 <= start < GSIZE 
+.PP
+graph must be an array of size GSIZE 
+.PP
+adj must be a 2-dimensional array with dimensions GSIZE and GSIZE 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the id of the connected node containing the val; SIZE_MAX if not found\&. 
+.RE
+.PP
+
+.SS "void bfs_span (bool adj[GSIZE][GSIZE], bool st[GSIZE][GSIZE])"
+
+.PP
+bfs_span constructs a spanning tree for the given graph defined by adjacency matrix adj the adjacency matrix for the graph  st the 2-dimensional array in which to store the spanning tree adjacency matrix 
+.PP
+\fBInvariant:\fP
+.RS 4
+the graph represented by adj must be connected 
+.PP
+the arrays adj and st must both be of dimension GSIZExGSIZE 
+.RE
+.PP
+
+.SS "bool conncomp (bool adj[GSIZE][GSIZE], size_t comp[GSIZE][GSIZE])"
+
+.PP
+conncomp computes the list of connected components of the undirected graph represented by the adjacency matrix adj\&. Since we are working with static arrays, the connected component array must be size GSIZE x GSIZE to allow for the cases of a fully connected or fully disconnected graph\&.
+.PP
+When complete, for a given i, comp[i][0] == SIZE_MAX indicates i-1 was the last connected component
+.PP
+\fBParameters:\fP
+.RS 4
+\fIadj\fP the adjacency matrix for the graph 
+.br
+\fIcomp\fP the array in which to store the connected components 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+adj[i][j] == true IFF adj[j][i] == true 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+false if an issue was encountered; true if the comp array is populated 
+.RE
+.PP
+
+.SS "size_t dequeue (size_t queue[QSIZE])"
+
+.PP
+dequeue removes an element from the front of the queue 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIqueue[QSIZE]\fP is the queue 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+queue must be an array of size QSIZE 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the value of the head element\&. if SIZE_MAX, means empty queue 
+.RE
+.PP
+
+.SS "bool enqueue (size_t queue[QSIZE], size_t val)"
+
+.PP
+enqueue adds an element to the front of a fixed-size queue\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIqueue[QSIZE]\fP is the queue 
+.br
+\fIval\fP is the value to enqueue 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+queue must be an array of size QSIZE 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+true if the value was enqueued 
+.RE
+.PP
+
+.SS "void print_adj (bool adj[GSIZE][GSIZE])"
+
+.PP
+print_adj prints an adjacency array to the terminal 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIadj\fP an adjacency array of size GSIZExGSIZE 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+adj must be of size GSIZExGSIZE 
+.RE
+.PP
+
+.SS "void printcomp (size_t comp[GSIZE][GSIZE])"
+
+.PP
+printcomp pretty prints the connected components represented by the array comp 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcomp\fP The connected components array to print\&. Each inner array is a SIZE_MAX-terminated list of connected components\&. A subarray with SIZE_MAX at index zero means there is not a connected component at that superindex\&. 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+comp should be dimension GSIZE x GSIZE 
+.RE
+.PP
+
+.SS "void setcomp (size_t comp[GSIZE][GSIZE])"
+
+.PP
+setcomp sets a GSIZE x GSIZE size_t array to SIZE_MAX 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcomp\fP the GSIZE x GSIZE array to set 
+.RE
+.PP
+\fBInvariant:\fP
+.RS 4
+comp must be dimension GSIZE x GSIZE 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.
