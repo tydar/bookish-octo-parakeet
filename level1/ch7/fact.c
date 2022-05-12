@@ -37,12 +37,14 @@ size_t wheel_fact_fst(size_t n) {
 	return n;
 }
 
-int main(void) {
-	size_t nums[5] = { 5, 7, 36, 42643801, 2345726 };
+int main(int argc, char* argv[argc]) {
 	puts("Number : First prime factor\n");
 	
-	for(size_t i = 0; i < 5; i++) {
-		printf("%zu : %zu\n", nums[i], wheel_fact_fst(nums[i]));
+	for(size_t i = 1; i < argc; i++) {
+		unsigned long n = strtoul(argv[i], NULL, 10);
+
+		// not sure if this cast is exactly legit
+		printf("%zu : %zu\n", n, wheel_fact_fst(n));
 	}
 
 	return EXIT_SUCCESS;
