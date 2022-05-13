@@ -27,6 +27,12 @@ void init_uf_arrays(size_t size, uf_elem uf[PC_MAX], unsigned stats[PC_MAX][2], 
 	}
 }
 
+/**find finds the root element for a given element
+ *
+ * @param pc pixel count
+ * @param e the element whose root we seek
+ * @param uf the union-find array
+ */
 uf_elem find(size_t pc, uf_elem e, uf_elem uf[PC_MAX]) {
 	if(uf[e] == e) return e;
 
@@ -46,6 +52,14 @@ uf_elem find(size_t pc, uf_elem e, uf_elem uf[PC_MAX]) {
 	return root;
 }
 
+/**uf_union takes the union of the sets containing two elements
+ *
+ * @param pc pixel count
+ * @param e1 the first element
+ * @param e2 the second element
+ * @param uf the union find array
+ * @param stats the stats array for this application
+ */
 void uf_union(size_t pc, uf_elem e1, uf_elem e2, uf_elem uf[PC_MAX], unsigned stats[PC_MAX][2]) {
 	uf_elem r1 = find(pc, e1, uf);
 	uf_elem r2 = find(pc, e2, uf);
@@ -63,6 +77,14 @@ void uf_union(size_t pc, uf_elem e1, uf_elem e2, uf_elem uf[PC_MAX], unsigned st
 	}
 }
 
+/**should_merge returns true if the sets containing two elements have close enough average values to merge
+ *
+ * @param pc pixel count
+ * @param e1 the first element
+ * @param e2 the second element
+ * @param uf the union-find array
+ * @param stats the stats array for this application
+ */
 bool should_merge(size_t pc, uf_elem e1, uf_elem e2, uf_elem uf[PC_MAX], unsigned stats[PC_MAX][2]) {
 	uf_elem r1 = find(pc, e1, uf);
 	uf_elem r2 = find(pc, e2, uf);
@@ -81,7 +103,14 @@ bool should_merge(size_t pc, uf_elem e1, uf_elem e2, uf_elem uf[PC_MAX], unsigne
 	return false;
 }
 
-void merge_all(size_t pc, size_t stride, uf_elem uf[PC_MAX], unsigned stats[PC_MAX][2], uint8_t* img) {
+/**merge_all executes the image segmentation merge for a provided image
+ *
+ * @param pc pixel count
+ * @param stride the line stride
+ * @param uf the union-find array
+ * @param stats the stats array for this application
+ */
+void merge_all(size_t pc, size_t stride, uf_elem uf[PC_MAX], unsigned stats[PC_MAX][2]) {
 	unsigned merged = 1;
 	while(merged > 0) {
 		merged = 0;
@@ -101,6 +130,14 @@ void merge_all(size_t pc, size_t stride, uf_elem uf[PC_MAX], unsigned stats[PC_M
 	}
 }
 
+/**uf_to_image writes the byte array representing the grayscale image defined by a union-find
+ * structure to the pointer newImg
+ *
+ * @param pc pixel count
+ * @param uf the union-find array
+ * @param stats the stats array
+ * @param newImg (output) the destination for the image
+ */
 void uf_to_image(size_t pc, uf_elem uf[PC_MAX], unsigned stats[PC_MAX][2], uint8_t* newImg) {
 	for(size_t i = 0; i < pc; i++) {
 		uf_elem root = find(pc, i, uf);
@@ -126,7 +163,7 @@ int main(void) {
 		unsigned stats[PC_MAX][2] = { 0 };
 		if(!uf) { perror("malloc uf"); return EXIT_FAILURE; }
 		init_uf_arrays(pc, uf, stats, img);
-		merge_all(pc, *stride, uf, stats, img);
+		merge_all(pc, *stride, uf, stats);
 
 		uint8_t *newImg = malloc(pc);
 		uf_to_image(pc, uf, stats, newImg);
@@ -138,7 +175,6 @@ int main(void) {
 	}
 
 	SimdFree(img);
-	SimdFree(newImg);
 	free(stride);
 	free(width);
 	free(height);
