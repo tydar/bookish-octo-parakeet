@@ -138,6 +138,7 @@ int main(void) {
 	}
 
 	SimdFree(img);
+	SimdFree(newImg);
 	free(stride);
 	free(width);
 	free(height);
