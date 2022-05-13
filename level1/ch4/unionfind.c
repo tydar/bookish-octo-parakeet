@@ -37,6 +37,10 @@ void FindCompress(size_t len, size_t elem, size_t Table[len]) {
 	// complexity tradeoff.
 	//
 	// Also assuming this means "all parents *with the same root* as IDed"
+	//
+	// TODO: I think I *may* have been incorrect. Instead of setting *all* nodes
+	// 	 on the path to the root to be children of the root. Set *only* the indicated
+	// 	 node's parent to be its root.
 	
 	const size_t root = Find(len, elem, Table);
 
